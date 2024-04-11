@@ -25,9 +25,21 @@ class FlashLightControlPlugin : FlutterPlugin, MethodCallHandler {
     when (call.method) {
       "turnOn" -> turnOnFlashlight(result)
       "turnOff" -> turnOffFlashlight(result)
+      "getBatteryLevel" -> getBatteryLevel(result)
       else -> result.notImplemented()
     }
   }
+
+  private fun getBatteryLevel(result: Result) {
+    val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+    val batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+    if (batteryLevel != -1) {
+      result.success(batteryLevel)
+    } else {
+      result.error("BATTERY_LEVEL_ERROR", "Failed to get battery level.", null)
+    }
+  }
+
 
   private fun turnOnFlashlight(result: Result) {
     val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager

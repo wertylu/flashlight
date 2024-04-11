@@ -29,4 +29,16 @@ class FlashLightControlPlugin {
       }
     }
   }
+
+  static Future<int?> getBatteryLevel() async {
+    try {
+      final int? batteryLevel = await _channel.invokeMethod('getBatteryLevel');
+      return batteryLevel;
+    } on PlatformException catch (e) {
+      if (kDebugMode) {
+        print("Failed to get battery level: '${e.message}'.");
+      }
+      return null;
+    }
+  }
 }
